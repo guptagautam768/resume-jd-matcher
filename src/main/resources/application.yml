@@ -1,0 +1,79 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: resume-jd-matcher
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 30MB
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/matcher}
+    username: ${SPRING_DATASOURCE_USERNAME:matcher}
+    password: ${SPRING_DATASOURCE_PASSWORD:matcher}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:}
+      chat:
+        options:
+          model: ${OPENAI_CHAT_MODEL:gpt-4o-mini}
+          temperature: 0.2
+      embedding:
+        options:
+          model: ${OPENAI_EMBEDDING_MODEL:text-embedding-3-small}
+          dimensions: 1536
+    mcp:
+      server:
+        name: resume-jd-matcher
+        version: 0.1.0
+        type: SYNC
+        protocol: SSE
+        instructions: >
+          Rank resumes against a job description. Use only the text supplied to each tool.
+          Do not invent employers, degrees, or skills.
+        sse-endpoint: /sse
+        sse-message-endpoint: /mcp/message
+
+matcher:
+  similarity-weight: 0.3
+  llm-weight: 0.7
+  retrieval-top-chunks: 40
+  default-top-k: 5
+  max-top-k: 20
+  aggregation: MAX
+  embedding-dimensions: 1536
+  max-resume-text-chars: 50000
+  max-files-per-upload: 10
+  max-file-bytes: 5242880
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+      base-path: /actuator
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never
+
+info:
+  app:
+    name: resume-jd-matcher
+    description: Explainable RAG ranking of resumes against a job description
+
+logging:
+  level:
+    dev.gautam.matcher: INFO

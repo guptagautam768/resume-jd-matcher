@@ -1,0 +1,10 @@
+package dev.gautam.matcher.job;
+
+import java.util.List;
+import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface JobRepository extends JpaRepository<JobDescription, UUID> {
+
+    List<JobDescription> findAllByOrderByCreatedAtDesc();
+}
