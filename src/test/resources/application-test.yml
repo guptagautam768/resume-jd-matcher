@@ -1,0 +1,12 @@
+spring:
+  ai:
+    openai:
+      api-key: test-key
+
+matcher:
+  embedding-dimensions: 64
+
+logging:
+  level:
+    org.testcontainers: INFO
+    dev.gautam.matcher: INFO

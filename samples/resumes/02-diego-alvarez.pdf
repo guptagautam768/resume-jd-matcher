@@ -1,0 +1,81 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Length 1053 >>
+stream
+BT
+/F1 11 Tf
+54 760 Td
+14 TL
+(Diego Alvarez) Tj
+T*
+(SYNTHETIC SAMPLE - fictional candidate, not a real person) Tj
+T*
+(Frontend Engineer) Tj
+T*
+() Tj
+T*
+(Summary) Tj
+T*
+(Interface engineer focused on component design, accessibility, and typed UI code.) Tj
+T*
+(This biography is invented for a portfolio demo.) Tj
+T*
+() Tj
+T*
+(Experience) Tj
+T*
+(Frontend Engineer, Lumen Street Studio \(fictional\), 2020-2026) Tj
+T*
+(- Shipped a design system in React and TypeScript.) Tj
+T*
+(- Built Next.js marketing pages and CSS layout systems.) Tj
+T*
+(- Wrote Jest and Testing Library coverage for shared components.) Tj
+T*
+(- Partnered with content editors on accessible forms.) Tj
+T*
+(UI Engineer, Paper Lantern \(fictional\), 2018-2020) Tj
+T*
+(- Rebuilt a dashboard with React hooks and TypeScript.) Tj
+T*
+(- Improved keyboard navigation and color contrast.) Tj
+T*
+() Tj
+T*
+(Skills) Tj
+T*
+(React, TypeScript, JavaScript, Next.js, CSS, Jest, accessibility, Figma) Tj
+T*
+() Tj
+T*
+(Education) Tj
+T*
+(B.A. Design and Computing, Mesa College \(fictional\), 2018) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 3 0 R >> >> >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000185 00000 n 
+0000001290 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1416
+%%EOF

@@ -1,0 +1,79 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Length 882 >>
+stream
+BT
+/F1 11 Tf
+54 760 Td
+14 TL
+(Jonah Blake) Tj
+T*
+(SYNTHETIC SAMPLE - fictional candidate, not a real person) Tj
+T*
+(Junior Java Developer) Tj
+T*
+() Tj
+T*
+(Summary) Tj
+T*
+(Early-career Java developer with one internship and a small set of services.) Tj
+T*
+(This biography is invented for a portfolio demo.) Tj
+T*
+() Tj
+T*
+(Experience) Tj
+T*
+(Junior Developer, Cedarstack \(fictional\), 2024-2026) Tj
+T*
+(- Fixed bugs in a Spring Boot internal tool.) Tj
+T*
+(- Added REST endpoints backed by MySQL.) Tj
+T*
+(- Wrote a handful of JUnit tests for form validation.) Tj
+T*
+(Intern, Cedarstack \(fictional\), 2023) Tj
+T*
+(- Paired on Java classes for a course catalog.) Tj
+T*
+(- Learned Git, code review, and basic SQL.) Tj
+T*
+() Tj
+T*
+(Skills) Tj
+T*
+(Java, Spring Boot, MySQL, REST, JUnit, Git) Tj
+T*
+() Tj
+T*
+(Education) Tj
+T*
+(B.S. Computer Science, Cedar State \(fictional\), 2024) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 3 0 R >> >> >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000185 00000 n 
+0000001118 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1244
+%%EOF

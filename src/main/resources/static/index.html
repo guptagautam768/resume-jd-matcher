@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resume &amp; JD Matcher</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%231c1915'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1c1915;
+      --muted: #5c564c;
+      --line: #d9d1c3;
+      --paper: #f6f1e8;
+      --card: #fffdf8;
+      --accent: #8c3d22;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+      color: var(--ink);
+      background: var(--paper);
+    }
+    main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+    h1 { font-size: 2.4rem; line-height: 1.1; margin-bottom: 0.4rem; }
+    h2 { font-size: 1.25rem; margin: 0 0 0.8rem; }
+    p { color: var(--muted); }
+    .grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+    @media (min-width: 800px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 1rem 1.1rem 1.2rem;
+    }
+    label { display: block; font-size: 0.85rem; margin: 0.7rem 0 0.3rem; }
+    input, textarea, button {
+      font: inherit;
+      width: 100%;
+    }
+    input, textarea {
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 0.55rem 0.6rem;
+    }
+    textarea { min-height: 9rem; resize: vertical; }
+    button {
+      margin-top: 0.8rem;
+      background: var(--ink);
+      color: #fff;
+      border: 0;
+      padding: 0.6rem 0.8rem;
+      cursor: pointer;
+    }
+    button:hover { background: var(--accent); }
+    .wide { grid-column: 1 / -1; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; vertical-align: top; border-top: 1px solid var(--line); padding: 0.7rem 0.4rem; }
+    .score { font-variant-numeric: tabular-nums; font-weight: 700; }
+    .error { color: var(--accent); white-space: pre-wrap; }
+    ul { margin: 0.2rem 0 0; padding-left: 1.1rem; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Resume &amp; JD Matcher</h1>
+  <p>Upload synthetic PDF resumes, save a job description, and rank candidates with strengths, gaps, and a rationale. This page talks to the local API. There is no authentication.</p>
+
+  <div class="grid">
+    <section>
+      <h2>Resumes</h2>
+      <form id="upload-form">
+        <label for="files">PDF files</label>
+        <input id="files" name="files" type="file" accept="application/pdf,.pdf" multiple required>
+        <button type="submit">Upload</button>
+      </form>
+      <div id="resumes"></div>
+    </section>
+
+    <section>
+      <h2>Job description</h2>
+      <form id="job-form">
+        <label for="title">Title</label>
+        <input id="title" name="title" required maxlength="200">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" required maxlength="20000"></textarea>
+        <button type="submit">Save job</button>
+      </form>
+      <div id="jobs"></div>
+    </section>
+
+    <section class="wide">
+      <h2>Rank</h2>
+      <form id="match-form">
+        <label for="jobId">Job</label>
+        <select id="jobId" required></select>
+        <label for="topK">Top K</label>
+        <input id="topK" type="number" min="1" max="20" value="5">
+        <button type="submit">Match candidates</button>
+      </form>
+      <p id="status" class="error" role="status"></p>
+      <div id="results"></div>
+    </section>
+  </div>
+</main>
+<script>
+const statusNode = document.querySelector("#status");
+
+function setStatus(message) {
+  statusNode.textContent = message || "";
+}
+
+async function readError(response) {
+  try {
+    const body = await response.json();
+    return body.message || response.statusText;
+  } catch (err) {
+    return response.statusText;
+  }
+}
+
+async function refreshResumes() {
+  const response = await fetch("/api/resumes");
+  const resumes = await response.json();
+  const host = document.querySelector("#resumes");
+  if (!resumes.length) {
+    host.innerHTML = "<p>No resumes yet.</p>";
+    return;
+  }
+  host.innerHTML = "<ul>" + resumes.map((resume) =>
+    `<li>${escapeHtml(resume.candidateName)} <span>(${escapeHtml(resume.fileName)})</span></li>`
+  ).join("") + "</ul>";
+}
+
+async function refreshJobs() {
+  const response = await fetch("/api/jobs");
+  const jobs = await response.json();
+  const select = document.querySelector("#jobId");
+  select.innerHTML = jobs.map((job) =>
+    `<option value="${job.id}">${escapeHtml(job.title)}</option>`
+  ).join("");
+  document.querySelector("#jobs").innerHTML = jobs.length
+    ? "<ul>" + jobs.map((job) => `<li>${escapeHtml(job.title)}</li>`).join("") + "</ul>"
+    : "<p>No jobs yet.</p>";
+}
+
+document.querySelector("#upload-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  setStatus("");
+  const data = new FormData();
+  for (const file of document.querySelector("#files").files) {
+    data.append("files", file);
+  }
+  const response = await fetch("/api/resumes", { method: "POST", body: data });
+  if (!response.ok) {
+    setStatus(await readError(response));
+    return;
+  }
+  event.target.reset();
+  await refreshResumes();
+});
+
+document.querySelector("#job-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  setStatus("");
+  const response = await fetch("/api/jobs", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      title: document.querySelector("#title").value,
+      description: document.querySelector("#description").value
+    })
+  });
+  if (!response.ok) {
+    setStatus(await readError(response));
+    return;
+  }
+  event.target.reset();
+  await refreshJobs();
+});
+
+document.querySelector("#match-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  setStatus("");
+  const jobId = document.querySelector("#jobId").value;
+  const topK = document.querySelector("#topK").value || "5";
+  if (!jobId) {
+    setStatus("Save a job first.");
+    return;
+  }
+  const response = await fetch(`/api/jobs/${jobId}/match?topK=${encodeURIComponent(topK)}`, { method: "POST" });
+  if (!response.ok) {
+    setStatus(await readError(response));
+    return;
+  }
+  renderResults(await response.json());
+});
+
+function renderResults(results) {
+  const host = document.querySelector("#results");
+  if (!results.length) {
+    host.innerHTML = "<p>No candidates to rank. Upload a resume first.</p>";
+    return;
+  }
+  host.innerHTML = `<table>
+    <thead><tr><th>Candidate</th><th>Score</th><th>Why</th></tr></thead>
+    <tbody>
+      ${results.map((row) => `<tr>
+        <td>${escapeHtml(row.candidateName)}</td>
+        <td class="score">${Number(row.score).toFixed(2)}<br><small>similarity ${Number(row.similarity).toFixed(3)}</small></td>
+        <td>
+          <strong>Strengths</strong>
+          <ul>${(row.strengths || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+          <strong>Gaps</strong>
+          <ul>${(row.gaps || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+          <p>${escapeHtml(row.rationale)}</p>
+        </td>
+      </tr>`).join("")}
+    </tbody>
+  </table>`;
+}
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
+  }[char]));
+}
+
+refreshResumes().catch((err) => setStatus(String(err)));
+refreshJobs().catch((err) => setStatus(String(err)));
+</script>
+</body>
+</html>

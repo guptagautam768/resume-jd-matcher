@@ -1,0 +1,10 @@
+# Local run without calling OpenAI. Ranking uses a heuristic stand-in, not a language model.
+# Use a separate Compose project so the database volume is not shared with the OpenAI profile
+# (embedding dimensions differ).
+#
+#   docker compose -f docker-compose.yml -f docker-compose.demo.yml -p matcher-demo up --build
+services:
+  app:
+    environment:
+      SPRING_PROFILES_ACTIVE: demo
+      OPENAI_API_KEY: demo-not-used

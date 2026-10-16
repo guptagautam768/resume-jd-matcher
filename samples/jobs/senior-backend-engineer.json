@@ -1,0 +1,4 @@
+{
+  "title": "Senior Backend Engineer",
+  "description": "Aster Recruiting (a fictional company) is hiring a senior backend engineer. This posting is synthetic and is not a real job.\n\nRequirements:\n- Strong Java and Spring Boot experience building services\n- PostgreSQL schema design and SQL\n- REST API design\n- Docker and AWS deployment experience\n- Automated tests with JUnit\n- Comfort with event-driven integration such as Kafka\n\nNice to have:\n- Flyway database migrations\n- Hibernate or Spring Data JPA\n- Experience splitting a system into microservices\n\nThe team ships Java 21 services and reviews code through pull requests."
+}
